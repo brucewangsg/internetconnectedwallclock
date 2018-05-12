@@ -180,7 +180,7 @@ if (navigator.getBattery) {
     batteryInfo.removeClass('display-none');
     var toggleSwitch = function () {
       var img = $("<img/>");
-      img.attr('src', 'http://192.168.31.149/on');
+      img.attr('src', 'http://192.168.31.149/on?r=' + (new Date - 0));
       img.css({width:1,height:1,border:'0px none'});
       img.appendTo(document.body);
       setTimeout(function () {
