@@ -66,6 +66,9 @@
       vertical-align: middle;
       margin-left: 5px;
     }
+    #battery.display-none {
+      display: none;
+    }
     #battery img.display-none {
       display: none;
     }
@@ -101,6 +104,7 @@
 </html>
 <script>
 window.textFontSize = 50;
+var ascenderRatio = 0.72;
 var calculateTextFontSize = function () {
   var fontSize = $(window).height();
   var element = $("<div/>").text("00:00").css({
@@ -123,15 +127,15 @@ var resizeText = function () {
   $('#time').css({
     fontSize : window.textFontSize + 'px',
     lineHeight : window.textFontSize + 'px',
-    marginTop : - (window.textFontSize/2) + 'px'
+    marginTop : - (window.textFontSize*(2-ascenderRatio)/2 - 8) + 'px'
   });
   $('#date').css({
     fontSize : 15 + 'px',
     lineHeight : 15 + 'px',
-    top : $(window).height()/2 + (window.textFontSize/2) + 'px'
+    top : $(window).height()/2 + (window.textFontSize*ascenderRatio/2 - 8) + 'px'
   });
   $('#second').css({
-    top : ($(window).height()/2 + (window.textFontSize/2) - 8) + 'px'    
+    top : ($(window).height()/2 + (window.textFontSize*ascenderRatio/2) - 15) + 'px'    
   });
 };
 var pad2 = function (v) {
@@ -141,8 +145,8 @@ var updateClock = function () {
   var d = new Date();
   $('#time').text(pad2(d.getHours())+':'+pad2(d.getMinutes()));
   $('#date').text(d.toString().split(/[0-9]{2}:[0-9]{2}:[0-9]{2}/)[0].replace(/^([a-zA-Z]+)/, "$1,"))
-  $(document.body)[d.getHours() <= 7 || d.getHours() >= 19 ? 'addClass' : 'removeClass']('night');  
-  $(document.body)[d.getHours() <= 5 || d.getHours() >= 22 ? 'addClass' : 'removeClass']('dim');  
+  $(document.body)[d.getHours() < 7 || d.getHours() >= 19 ? 'addClass' : 'removeClass']('night');  
+  $(document.body)[d.getHours() < 5 || d.getHours() >= 22 ? 'addClass' : 'removeClass']('dim');  
 
   var percentageWidth = 100.0 * ($(window).width() - 80) / $(window).width() * d.getSeconds() / 60;
   $('#second').css({
