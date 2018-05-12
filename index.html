@@ -65,6 +65,22 @@
     #battery img.display-none {
       display: none;
     }
+    #battery.try-charge::before,
+    #battery.try-uncharge::before {
+      position: absolute;
+      top : 0;
+      left : -12px;
+      width : 12px;
+      height: 12px;
+      border-radius: 6px;
+      content : ' ';
+    }
+    #battery.try-charge::before {
+      background-color: #0c0;
+    }
+    #battery.try-uncharge::before {
+      background-color: #c00;
+    }
   </style>
 </head>
 <body>
@@ -163,13 +179,13 @@ if (navigator.getBattery) {
     }
     batteryInfo.removeClass('display-none');
     var toggleSwitch = function () {
-      var iframe = $("<iframe/>");
-      iframe.attr('src', 'http://192.168.31.149/on');
-      iframe.css({width:1,height:1,border:'0px none'});
-      iframe.appendTo(document.body);
+      var img = $("<img/>");
+      img.attr('src', 'http://192.168.31.149/on');
+      img.css({width:1,height:1,border:'0px none'});
+      img.appendTo(document.body);
       setTimeout(function () {
-        iframe.remove();
-      }, 1000);
+        img.remove();
+      }, 2000);
     };
     updateBattery();
     updateChargingInfo();
@@ -177,13 +193,41 @@ if (navigator.getBattery) {
       updateBattery();
       updateChargingInfo();
 
-      if (battery.level < 0.4 && !battery.charging) {
-        toggleSwitch();
+      if (battery.level < 0.6) {
+        $('#battery').removeClass('try-uncharge');
+        if (!battery.charging) {
+          toggleSwitch();
+          $('#battery').addClass('try-charge');
+          setTimeout(function () {
+            if (!battery.charging) {
+              $('#battery').addClass('try-charge');
+            } else {
+              $('#battery').removeClass('try-charge');              
+            }
+          }, 500);
+        } else {
+          $('#battery').removeClass('try-charge');
+        }
+      } else if (battery.level > 0.7) {
+        $('#battery').removeClass('try-charge');
+        if (battery.charging) {
+          toggleSwitch();
+          $('#battery').addClass('try-uncharge');
+          setTimeout(function () {
+            if (battery.charging) {
+              $('#battery').addClass('try-uncharge');
+            } else {
+              $('#battery').removeClass('try-uncharge');              
+            }
+          }, 500);
+        } else {
+          $('#battery').removeClass('try-uncharge');
+        }
+      } else {
+        $('#battery').removeClass('try-charge');
+        $('#battery').removeClass('try-uncharge');        
       }
-      if (battery.level > 0.6 && battery.charging) {
-        toggleSwitch();
-      }
-    }, 30000);
+    }, 3000);
     setInterval(function () {
       updateChargingInfo();
     }, 1000);
