@@ -104,7 +104,7 @@
 </html>
 <script>
 window.textFontSize = 50;
-var ascenderRatio = 0.72;
+var ascenderRatio = 1.0*265/363;
 var calculateTextFontSize = function () {
   var fontSize = $(window).height();
   var element = $("<div/>").text("00:00").css({
@@ -132,10 +132,10 @@ var resizeText = function () {
   $('#date').css({
     fontSize : 15 + 'px',
     lineHeight : 15 + 'px',
-    top : $(window).height()/2 + (window.textFontSize*ascenderRatio/2) + 'px'
+    top : $(window).height()/2 + (window.textFontSize/2) + 'px'
   });
   $('#second').css({
-    top : ($(window).height()/2 + (window.textFontSize*ascenderRatio/2) - 8) + 'px'    
+    top : ($(window).height()/2 + (window.textFontSize/2) - 8) + 'px'    
   });
 };
 var pad2 = function (v) {
