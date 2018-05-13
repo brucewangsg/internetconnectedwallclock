@@ -126,16 +126,16 @@ var calculateTextFontSize = function () {
 var resizeText = function () {
   $('#time').css({
     fontSize : window.textFontSize + 'px',
-    lineHeight : window.textFontSize + 'px',
-    marginTop : - (window.textFontSize*(2-ascenderRatio)/2 - 8) + 'px'
+    lineHeight : window.textFontSize*ascenderRatio + 'px',
+    marginTop : - (window.textFontSize*ascenderRatio/2) - (16 + 15) + 'px'
   });
   $('#date').css({
     fontSize : 15 + 'px',
     lineHeight : 15 + 'px',
-    top : $(window).height()/2 + (window.textFontSize/2) + 'px'
+    top : $(window).height()/2 + (window.textFontSize*ascenderRatio/2) + 8 + 'px'
   });
   $('#second').css({
-    top : ($(window).height()/2 + (window.textFontSize/2) - 8) + 'px'    
+    top : ($(window).height()/2 + (window.textFontSize*ascenderRatio/2)) + 'px'    
   });
 };
 var pad2 = function (v) {
