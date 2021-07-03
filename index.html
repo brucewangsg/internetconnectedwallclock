@@ -187,25 +187,42 @@ if (navigator.getBattery) {
       });
     }
     batteryInfo.removeClass('display-none');
-    var toggleSwitch = function () {
+    var toggleSwitch = function (switchOn) {
+      var url = switchURL(switchOn);
       var img = $("<img/>");
-      img.attr('src', 'http://192.168.31.149/on?r=' + (new Date - 0));
+      img.attr('src', url);
       img.css({width:1,height:1,border:'0px none'});
       img.appendTo(document.body);
       setTimeout(function () {
         img.remove();
       }, 2000);
     };
+    var isFirstSet = {};
+    var switchURL = function (switchOn) {
+      var defaultURL = 'http://192.168.31.149/on';
+      var switchKey = switchOn ? 'switch-on' : 'switch-off';
+      var url = window.localStorage.getItem('switch-off') || defaultURL;
+
+      if (!isFirstSet[switchKey]) {
+        isFirstSet[switchKey] = true;
+        window.localStorage.setItem(switchKey, url);
+      }
+
+      return url + (url.indexOf('?') ? '&' : '?') + 'r=' + (new Date - 0);
+    };
+    switchURL(true); // force write to local storage
+    switchURL(false);
+
     updateBattery();
     updateChargingInfo();
     setInterval(function () {
       updateBattery();
       updateChargingInfo();
 
-      if (battery.level < 0.6) {
+      if (battery.level < 0.4) {
         $('#battery').removeClass('try-uncharge');
         if (!battery.charging) {
-          toggleSwitch();
+          toggleSwitch(true);
           $('#battery').addClass('try-charge');
           setTimeout(function () {
             if (!battery.charging) {
@@ -217,10 +234,10 @@ if (navigator.getBattery) {
         } else {
           $('#battery').removeClass('try-charge');
         }
-      } else if (battery.level > 0.7) {
+      } else if (battery.level > 0.8) {
         $('#battery').removeClass('try-charge');
         if (battery.charging) {
-          toggleSwitch();
+          toggleSwitch(false);
           $('#battery').addClass('try-uncharge');
           setTimeout(function () {
             if (battery.charging) {
