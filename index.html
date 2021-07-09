@@ -258,9 +258,9 @@ if (navigator.getBattery) {
       updateBattery();
       updateChargingInfo();
 
-      if (battery.level < 0.4) {
+      if (battery.level < 0.5) {
         $('#battery').removeClass('try-uncharge');
-        if (!battery.charging) {
+        if (!battery.charging || battery.level < 0.45) {
           toggleSwitch(true);
           $('#battery').addClass('try-charge');
           setTimeout(function () {
@@ -273,9 +273,9 @@ if (navigator.getBattery) {
         } else {
           $('#battery').removeClass('try-charge');
         }
-      } else if (battery.level > 0.8) {
+      } else if (battery.level > 0.7) {
         $('#battery').removeClass('try-charge');
-        if (battery.charging) {
+        if (battery.charging || battery.level > 0.75) {
           toggleSwitch(false);
           $('#battery').addClass('try-uncharge');
           setTimeout(function () {
